@@ -81,7 +81,6 @@ def obtenerConceptoRandom():
         stringPalabras = "matematicas:"
 
     counter = 0
-    palabrasObtenidas = conceptos['jorge']
 
     for i in palabrasObtenidas:
         stringPalabras += i 
@@ -96,19 +95,21 @@ def obtenerConceptoRandom():
     
 def devolverRanking():
     cadenaRanking = ""
-    counter = 0
+    cadenaFinal = ""
+    
+    print("Tamaño ranking " + str(len(ranking)))
 
     for i in ranking:
-        cadenaRanking += "Usuarioo:" + str(i.usuario.split("\n")) + ","
+        cadenaRanking += "Usuario:" + str(i.usuario.split('\n')[0]) + ","
         cadenaRanking += "Modalidad:" + str(i.modalidad) + ","
         cadenaRanking += "Dificultad:" + str(i.dificultad) + ","
         cadenaRanking += "Tiempo:" + str(i.tiempo)
         cadenaRanking += "_"
-        print(cadenaRanking)
+        cadenaFinal += cadenaRanking
+        cadenaRanking = ""
 
-        counter += 1
-
-    return cadenaRanking
+    print(cadenaFinal)
+    return cadenaFinal
 
 
 def main():
@@ -116,8 +117,8 @@ def main():
     #Crear el socket
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.bind( ('10.100.66.219',7881) )
-    #s.bind( ('127.0.0.1',7881) )
+    #s.bind( ('10.100.66.219',7881) )
+    s.bind( ('127.0.0.1',7881) )
 
     s.listen(1)
 
@@ -145,7 +146,7 @@ def main():
 
         elif("usuario" in mensajeRecibido):
             usuario = mensajeRecibido.split(":")[1] #Envias usuario:nombreusuario
-            print("usuario rcibidooo: " + usuario)
+            print("usuario recibidooo: " + usuario)
             usuario = usuario.split("\n")[0]
             print("usuario compuesto: " + usuario)
             conexion.sendall("ok")
@@ -168,7 +169,7 @@ def main():
 
 
         elif("facil" in mensajeRecibido or "intermedio" in mensajeRecibido or "dificil" in mensajeRecibido):
-            dificultad = mensajeRecibido
+            dificultad = str(mensajeRecibido.split('\n')[0])
             conexion.sendall("ok")
 
         #Parte general
@@ -204,12 +205,11 @@ def main():
             
             nuevoJugador = Resultado.Resultado(modalidad, dificultad, usuario, tiempo)
             ranking.append(nuevoJugador)
-
             conexion.sendall(devolverRanking())
 
         else:
             conexion.sendall("Error")
-            continue
+            
             
             
             
