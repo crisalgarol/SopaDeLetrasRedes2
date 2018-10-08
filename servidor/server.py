@@ -100,9 +100,9 @@ def devolverRanking():
     print("Tamaño ranking " + str(len(ranking)))
 
     for i in ranking:
-        cadenaRanking += "Usuario:" + str(i.usuario.split('\n')[0]) + ","
-        cadenaRanking += "Modalidad:" + str(i.modalidad) + ","
-        cadenaRanking += "Dificultad:" + str(i.dificultad) + ","
+        cadenaRanking += "Usuario:" + str(i.usuario.split('\r')[0]) + " "
+        cadenaRanking += "Modalidad:" + str(i.modalidad) + " "
+        cadenaRanking += "Dificultad:" + str(i.dificultad) + " "
         cadenaRanking += "Tiempo:" + str(i.tiempo)
         cadenaRanking += "_"
         cadenaFinal += cadenaRanking
@@ -118,7 +118,7 @@ def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     #s.bind( ('10.100.66.219',7881) )
-    s.bind( ('127.0.0.1',7881) )
+    s.bind( ('172.20.10.3',7881) )
 
     s.listen(1)
 
@@ -146,8 +146,7 @@ def main():
 
         elif("usuario" in mensajeRecibido):
             usuario = mensajeRecibido.split(":")[1] #Envias usuario:nombreusuario
-            print("usuario recibidooo: " + usuario)
-            usuario = usuario.split("\n")[0]
+            usuario = usuario.split("\r")[0]
             print("usuario compuesto: " + usuario)
             conexion.sendall("ok")
 
@@ -169,7 +168,7 @@ def main():
 
 
         elif("facil" in mensajeRecibido or "intermedio" in mensajeRecibido or "dificil" in mensajeRecibido):
-            dificultad = str(mensajeRecibido.split('\n')[0])
+            dificultad = str(mensajeRecibido.split('\r')[0])
             conexion.sendall("ok")
 
         #Parte general
